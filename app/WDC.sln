@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WDC", "WDC\WDC.csproj", "{FC86828C-C261-4C43-8111-A0BDD38AD93D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{7EAD0717-5D54-4ACB-B264-84359536F5EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WdcConsole", "WdcConsole\WdcConsole.csproj", "{AA4366D3-B91F-4DC0-AEC9-EE8DF2A4311F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FC86828C-C261-4C43-8111-A0BDD38AD93D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC86828C-C261-4C43-8111-A0BDD38AD93D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC86828C-C261-4C43-8111-A0BDD38AD93D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC86828C-C261-4C43-8111-A0BDD38AD93D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EAD0717-5D54-4ACB-B264-84359536F5EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EAD0717-5D54-4ACB-B264-84359536F5EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EAD0717-5D54-4ACB-B264-84359536F5EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EAD0717-5D54-4ACB-B264-84359536F5EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA4366D3-B91F-4DC0-AEC9-EE8DF2A4311F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA4366D3-B91F-4DC0-AEC9-EE8DF2A4311F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA4366D3-B91F-4DC0-AEC9-EE8DF2A4311F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA4366D3-B91F-4DC0-AEC9-EE8DF2A4311F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
