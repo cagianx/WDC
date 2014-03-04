@@ -28,6 +28,12 @@ namespace WdcConsole
                     if (args.Length<2||String.IsNullOrEmpty(args[1])) Exit("Argument 2 must be a file path");
                     CreateSampleProject(args[1]);
                     break;
+
+                case "build-project-file":
+                case "bpf":
+                    BuildProjectFile();
+
+                    break;
             }
         }
 
@@ -65,6 +71,11 @@ namespace WdcConsole
             });
             File.WriteAllText(path+"SampleProject.wdc",Json.Encode(p));
             Exit("sample project created");
+        }
+
+        static void BuildProjectFile()
+        {
+            
         }
 
     }

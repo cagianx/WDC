@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.Helpers;
 using System.Windows.Forms;
 using CsQuery;
 using SelfishHttp;
@@ -13,6 +15,7 @@ using WDC.Project;
 
 namespace WDC
 {
+ 
     class ProjectRunner
     {
         protected WdcProject Project { get; set; }
@@ -70,6 +73,7 @@ namespace WDC
    
     class SiteRunner
     {
+        public string Identity = DateTime.Now.Ticks.ToString(CultureInfo.InvariantCulture);
         public FileInfo File2Parse;
         private WebBrowser Browser;
         private SiteTemplate Site;
@@ -112,8 +116,28 @@ namespace WDC
             {
                 doc.Find("body").Append(script.AbsoluteUri);
             }
-            doc.Find("body").Append("<!-- yeah!! -->");
-            doc.Save(File2Parse.FullName,DomRenderingOptions.Default);
+
+            doc.Find("body").Append(
+                            CQ.CreateFragment("<script/>")
+                                .Attr("type","text/javascript")
+                                .Text(@"
+                                    var window.WDC="+(Json.Encode(new Dictionary<string,string>
+                                {
+                                    {"ServiceUrl","http://localhost:"+this.ServerPort+"/"},
+                                    {"Identity",this.Identity}
+
+                                }))+";")
+
+                                ).Append(CQ.CreateFragment("<script/>")
+                                .Attr("type", "text/javascript")
+                                .Text(File.ReadAllText("WDC.js")))
+
+                                .Append(CQ.CreateFragment("<script/>")
+                                .Attr("type", "text/javascript")
+                                .Text(" window."+this.Site.CallBackName+"();"));
+
+
+            doc.Save(File2Parse.FullName);
             Browser=new WebBrowser();
             Browser.Navigate(File2Parse.FullName);
             while(IsRunning)Thread.Sleep(100);
