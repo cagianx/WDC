@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Mime;
+using System.Text.RegularExpressions;
 using System.Web.Helpers;
 using WDC.Project;
 
@@ -14,27 +15,57 @@ namespace WdcConsole
         {
             Console.WriteLine("Welcome to wdc console app!");
             Console.WriteLine("Current Arguments "+Json.Encode(args));
-            if (!args.Any())
+            var startWithNoParameters = !args.Any();
+
+            do
             {
-             
-                Exit("parameter needed");
-            }
+                if (startWithNoParameters)
+                {
+                    string command = "";
+                    while (command.Trim().Length== 0)
+                    {
+                        Console.WriteLine("");
+                        Console.WriteLine("Type a command:");
+                        Console.Write("> ");
+                        command = Console.ReadLine();
+                    }
+                    
+                  
+                    Regex argReg = new Regex(@"\w+|""[\\\/\.\w\s]*""");
+                    args = new string[argReg.Matches(command).Count];
+                    int i = 0;
+                    foreach (var enumer in argReg.Matches(command))
+                    {
+                        args[i] = enumer.ToString();
+                        i++;
+                    }
+                }
 
-            switch (args[0])
-            {
-                case "create-sample-project":
-                case "csp":
+                switch (args[0])
+                {
+                    case "create-sample-project":
+                    case "csp":
 
-                    if (args.Length<2||String.IsNullOrEmpty(args[1])) Exit("Argument 2 must be a file path");
-                    CreateSampleProject(args[1]);
-                    break;
+                        if (args.Length < 2 || String.IsNullOrEmpty(args[1])) 
+                            Console.WriteLine("Argument 2 must be a file path");
+                        else
+                            CreateSampleProject(args[1]);
+                        break;
 
-                case "build-project-file":
-                case "bpf":
-                    BuildProjectFile();
-
-                    break;
-            }
+                    case "build-project-file":
+                    case "bpf":
+                        BuildProjectFile();
+                    
+                        break;
+                    case "exit":
+                    case "q":
+                        startWithNoParameters = false;
+                        break;
+                    default:
+                        Console.WriteLine("Unrecognized command "+args[0]);
+                        break;
+                }
+            } while (startWithNoParameters);
         }
 
        
@@ -69,8 +100,9 @@ namespace WdcConsole
                 Description = "This is the description for the result page",
                 Id = "ResultPage"
             });
+            
             File.WriteAllText(path+"SampleProject.wdc",Json.Encode(p));
-            Exit("sample project created");
+            Console.WriteLine("sample project created");
         }
 
         static void BuildProjectFile()

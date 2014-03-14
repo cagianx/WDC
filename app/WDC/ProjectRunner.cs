@@ -80,7 +80,7 @@ namespace WDC
         private List<Uri> Scripts;
         public bool IsRunning = true;
         public int ServerPort { get; set; }
-        public Thread th { get; set; }
+        public Thread Th { get; set; }
         public SiteRunner(string fileContent,
                         SiteTemplate st,
                         int serverPort,
@@ -93,8 +93,8 @@ namespace WDC
             File2Parse = new FileInfo(Path.GetTempFileName());
             File.WriteAllText(File2Parse.FullName, fileContent);
 
-           th=new Thread(this.LauchSite);
-            th.Start();
+           Th=new Thread(this.LauchSite);
+            Th.Start();
           
            
         }
