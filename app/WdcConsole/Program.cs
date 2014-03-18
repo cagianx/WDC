@@ -2,17 +2,21 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Mime;
 using System.Text.RegularExpressions;
 using System.Web.Helpers;
+using WDC;
 using WDC.Project;
 
 namespace WdcConsole
 {
     class Program
     {
+        public static string AppPath;
+        
+
         static void Main(string[] args)
         {
+         
             Console.WriteLine("Welcome to wdc console app!");
             Console.WriteLine("Current Arguments "+Json.Encode(args));
             var startWithNoParameters = !args.Any();
@@ -43,13 +47,27 @@ namespace WdcConsole
 
                 switch (args[0])
                 {
+                    case "run":
+                        var projectFile = Path.Combine(Config.CurrentPath, args[1]);
+
+                      var runner=  new ProjectRunner(Json.Decode<WdcProject>(File.ReadAllText(projectFile)),args[2]);
+
+                        runner.StartServer();
+                        break;
+                    case "sc":
+                      Console.WriteLine("Main Path: "+Config.MainPath);
+                      Console.WriteLine("Current Path: " + Config.CurrentPath);
+                      Console.WriteLine("Cache path: " + Config.CachePath);
+                       
+                        break;
                     case "create-sample-project":
                     case "csp":
+                        var path = args.Length>=2&&!String.IsNullOrEmpty(args[1])
+                            ? Path.Combine(Config.MainPath, args[1])
+                            : Config.CurrentPath;
 
-                        if (args.Length < 2 || String.IsNullOrEmpty(args[1])) 
-                            Console.WriteLine("Argument 2 must be a file path");
-                        else
-                            CreateSampleProject(args[1]);
+
+                        CreateSampleProject(path);
                         break;
 
                     case "build-project-file":
@@ -79,12 +97,12 @@ namespace WdcConsole
         static void CreateSampleProject(string path)
         {
 
-            var p = new WDC.Project.WdcProject
+            var p = new WdcProject
             {
                 Name = "Project to extract data from example.com",
                 MainScriptSource = "here the Javascritp code",
                 ScriptsPath = new List<Uri>
-                        {
+                {
                             new Uri("http://code.jquery.com/jquery-latest.min.js")
                         }
             };
@@ -109,6 +127,5 @@ namespace WdcConsole
         {
             
         }
-
     }
 }

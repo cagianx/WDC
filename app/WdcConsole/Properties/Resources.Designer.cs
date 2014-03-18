@@ -59,5 +59,7 @@ namespace WdcConsole.Properties {
                 resourceCulture = value;
             }
         }
+        
+
     }
 }

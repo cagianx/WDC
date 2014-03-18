@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,14 +16,18 @@ using WDC.Project;
 
 namespace WDC
 {
- 
-    class ProjectRunner
+    public class ProjectRunner
     {
         protected WdcProject Project { get; set; }
         private SelfishHttp.Server _server;
         private int ServerPort { get; set; }
         public List<SiteRunner> LsSiteRunners = new List<SiteRunner>();
-       
+        private AjRequestNext StartUrl { get; set; }
+        public ProjectRunner(WdcProject proj, AjRequestNext startUrl)
+        {
+            this.Project = proj;
+            this.StartUrl = startUrl;
+        }
         public void StartServer()
         {
             ServerPort = Utility.ChooseRandomUnusedPort();
@@ -34,6 +39,7 @@ namespace WDC
             this._server=new SelfishHttp
                         .Server(ServerPort);
             Console.WriteLine("Server listening on port " + ServerPort);
+
             this._server.OnPost("/next").Respond((req, res) => {
 
                 var pageContent=req.BodyAs<string>();
@@ -66,12 +72,33 @@ namespace WDC
                     
                 }
             });
+
+            Console.WriteLine("provide starting url to server to start the crawler");
+
+
+             PostAsync("http://localhost:" + this.ServerPort + "/next",Json.Encode(this.StartUrl));
+
+
+
+        }
+        
+
+        public async Task<string> PostAsync(string uri, string data)
+        {
+            var httpClient = new HttpClient();
+            var response = await httpClient.PostAsync(uri, new StringContent(data));
+
+            response.EnsureSuccessStatusCode();
+
+            string content = await response.Content.ReadAsStringAsync();
+            return await Task.Run(() =>content);
         }
 
 
+
     }
-   
-    class SiteRunner
+
+    public class SiteRunner
     {
         public string Identity = DateTime.Now.Ticks.ToString(CultureInfo.InvariantCulture);
         public FileInfo File2Parse;
@@ -90,7 +117,7 @@ namespace WDC
             this.Site = st;
             this.ServerPort = serverPort;
 
-            File2Parse = new FileInfo(Path.GetTempFileName());
+            File2Parse = new FileInfo(Config.CachePath);
             File.WriteAllText(File2Parse.FullName, fileContent);
 
            Th=new Thread(this.LauchSite);
